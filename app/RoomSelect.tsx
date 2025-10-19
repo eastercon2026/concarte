@@ -32,11 +32,19 @@ export default function RoomSelect({
     onRoomSelected && onRoomSelected(room);
   };
 
+  const searchableRooms = React.useMemo(
+    () =>
+      config.map.rooms
+        .filter((room) => room.searchable !== false)
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    [config.map.rooms],
+  );
+
   let results;
   if (query === "") {
-    results = config.map.rooms.sort((a, b) => a.label.localeCompare(b.label));
+    results = searchableRooms;
   } else {
-    const fuse = new Fuse(config.map.rooms, {
+    const fuse = new Fuse(searchableRooms, {
       keys: ["label", "aliases"],
       ignoreLocation: true,
     });

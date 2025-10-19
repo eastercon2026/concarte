@@ -118,6 +118,12 @@ export interface Room {
   };
 
   /**
+   * Whether this room should appear in the search list.
+   * Defaults to true if not specified.
+   */
+  searchable?: boolean;
+
+  /**
    * Area of the room on the map.
    *
    * The area should be a list of points in the form [x, y].
