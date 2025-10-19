@@ -87,4 +87,4 @@ documentation on the configuration options.
 ## Contributing
 
 We welcome contributions to the project.
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.
+See [CONTRIBUTING.md](./docs/CONTRIBUTING.md) for more information.
