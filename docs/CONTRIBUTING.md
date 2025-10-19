@@ -33,7 +33,7 @@ If you would like to contribute code to the project, please follow these steps:
 
 ## Style guide
 
-Run `yarn format` to format your code before submitting a pull request.
+Run `pnpm run format` to format your code before submitting a pull request.
 
 We rebase all pull requests before merging, so please make sure your branch is
 up to date with the main branch, and your commits are clean and atomic.

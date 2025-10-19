@@ -33,7 +33,7 @@ as a side project. However, we would like to add the following features:
 Run the development server:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the
@@ -44,7 +44,7 @@ result.
 Run the production build:
 
 ```bash
-yarn build
+pnpm build
 ```
 
 The output will be in the `out` directory. This can be hosted on any static file
