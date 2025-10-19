@@ -175,8 +175,12 @@ export default function Map({
         (f) => f,
       ) as Feature;
       if (feature) {
-        onRoomSelected && onRoomSelected(feature.get("room"));
+        const room: Room = feature.get("room");
+        onRoomSelected && onRoomSelected(room);
         setSelectedFeature(feature);
+        if (room.link) {
+          window.open(room.link.href, "_blank");
+        }
       } else {
         onRoomSelected && onRoomSelected(undefined);
         setSelectedFeature(null);

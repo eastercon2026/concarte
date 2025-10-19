@@ -79,6 +79,17 @@ export default function InfoPanel({
             >
               {dedent(room.description)}
             </Markdown>
+            {room.link && (
+              <p>
+                <a
+                  href={room.link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {room.link.title}
+                </a>
+              </p>
+            )}
           </div>
         )}
       </div>

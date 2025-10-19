@@ -108,6 +108,16 @@ export interface Room {
   description?: string;
 
   /**
+   * Optional link to display at the bottom of the room description.
+   * If present, a link will be added to the bottom of the description panel.
+   * Clicking on the room on the map will open this link in a new tab.
+   */
+  link?: {
+    href: string;
+    title: string;
+  };
+
+  /**
    * Area of the room on the map.
    *
    * The area should be a list of points in the form [x, y].
