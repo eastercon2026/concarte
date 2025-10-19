@@ -26,6 +26,12 @@ as a side project. However, we would like to add the following features:
 - **Accessible**: The map is accessible to screen readers and keyboard users.
 - **Offline support**: The map works offline after the first visit.
 
+## Conventions using ConCarte
+
+- [Gaelcon 37](https://gaelcon37.conmaps.com/)
+- [Eastercon 2025](https://map.easterconbelfast.org/)
+- [Octocon 2024](https://map.octocon.com/)
+
 ## Building
 
 ### Setup
