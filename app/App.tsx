@@ -57,7 +57,7 @@ export default function App({ roomId }: { roomId?: string }) {
   return (
     <main>
       <Map
-        className="h-screen w-screen"
+        className="h-dvh w-dvw"
         config={config}
         selectedRoom={selectedRoom}
         focusedRoom={focusedRoom}
