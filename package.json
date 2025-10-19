@@ -7,7 +7,7 @@
     "build": "pnpm generate:theme && next build",
     "start": "next start",
     "lint": "eslint .",
-    "format": "prettier --write --ignore-path .gitignore .",
+    "format": "prettier --write --ignore-path .gitignore --ignore-path .prettierignore .",
     "generate:theme": "tsx scripts/generate-theme-css.ts"
   },
   "dependencies": {

@@ -1,0 +1,2 @@
+# Additional files to ignore beyond .gitignore
+pnpm-lock.yaml
