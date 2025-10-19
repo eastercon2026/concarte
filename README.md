@@ -29,8 +29,13 @@ as a side project. However, we would like to add the following features:
 ## Conventions using ConCarte
 
 - [Gaelcon 37](https://gaelcon37.conmaps.com/)
+- [Gamecon 2025](https://gamecon2025.conmaps.com/)
 - [Eastercon 2025](https://map.easterconbelfast.org/)
+- [AthventureCon III](https://athventurecon3.conmaps.com/)
+- [Warpcon 35](https://warpcon35.conmaps.com/)
+- [Dragonmeet 2024](https://dragonmeet2024.conmaps.com/)
 - [Octocon 2024](https://map.octocon.com/)
+- [Gaelcon 36](https://gaelcon.lostcarpark.com/)
 
 ## Building
 
