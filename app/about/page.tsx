@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import config from "../config";
 import Markdown from "react-markdown";
 import { dedent } from "../text-utils";
+import Link from "next/link";
 
 export default function About() {
   const t = useTranslations("about");
@@ -25,7 +26,7 @@ export default function About() {
   return (
     <main className="prose prose-default mx-auto p-4 pt-12">
       <p>
-        <a href="/">← {t("back")}</a>
+        <Link href="/">← {t("back")}</Link>
       </p>
       <h1>{t("title")}</h1>
       <Markdown>{dedent(config.description)}</Markdown>
