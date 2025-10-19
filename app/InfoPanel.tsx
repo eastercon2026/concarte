@@ -40,7 +40,7 @@ export default function InfoPanel({
     let icon;
     if (!room.description) {
       icon = (
-        <ChevronUpIcon className="m-auto size-6 fill-disabled stroke-disabled" />
+        <ChevronUpIcon className="fill-disabled stroke-disabled m-auto size-6" />
       );
     } else if (expanded) {
       icon = <ChevronDownIcon className="m-auto size-6" />;
@@ -49,12 +49,12 @@ export default function InfoPanel({
     }
 
     panel = (
-      <div className="pointer-events-auto relative bg-background p-4 pt-6 text-left shadow-top">
+      <div className="bg-background shadow-top pointer-events-auto relative p-4 pt-6 text-left">
         <header
-          className={`${expanded && room.description ? "border-b border-border pb-2" : ""} ${room.description ? "cursor-pointer" : ""}`}
+          className={`${expanded && room.description ? "border-border border-b pb-2" : ""} ${room.description ? "cursor-pointer" : ""}`}
           onClick={handlePanelClick}
         >
-          <p className="absolute left-0 right-0 top-0">{icon}</p>
+          <p className="absolute top-0 right-0 left-0">{icon}</p>
           <h1 className="text-xl">
             <button
               className="mr-2 align-text-bottom"
@@ -88,8 +88,8 @@ export default function InfoPanel({
   const t = useTranslations();
 
   return (
-    <div className="pointer-events-none absolute bottom-0 left-0 right-0 text-right">
-      <div className="m-2 inline-block rounded border border-border bg-background opacity-75 shadow-xl hover:opacity-100">
+    <div className="pointer-events-none absolute right-0 bottom-0 left-0 text-right">
+      <div className="border-border bg-background m-2 inline-block rounded border opacity-75 shadow-xl hover:opacity-100">
         <a href="/about" className="pointer-events-auto inline-block p-2">
           {t("about.title")}
         </a>

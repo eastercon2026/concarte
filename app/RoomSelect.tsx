@@ -48,7 +48,7 @@ export default function RoomSelect({
   if (focused) {
     icon = (
       <button
-        className="absolute left-6 top-2 cursor-pointer pb-2 pl-1 pr-2 pt-2 text-primary-text"
+        className="text-primary-text absolute top-2 left-6 cursor-pointer pt-2 pr-2 pb-2 pl-1"
         tabIndex={1}
         onClick={onDismiss}
       >
@@ -57,19 +57,19 @@ export default function RoomSelect({
     );
   } else {
     icon = (
-      <MagnifyingGlassIcon className="absolute left-6 top-2 size-10 pb-2 pl-1 pr-2 pt-2 text-primary-text" />
+      <MagnifyingGlassIcon className="text-primary-text absolute top-2 left-6 size-10 pt-2 pr-2 pb-2 pl-1" />
     );
   }
 
   return (
     <div
-      className={`absolute top-0 z-50 w-screen transition ${focused ? "h-screen bg-background" : "bg-transparent"}`}
+      className={`absolute top-0 z-50 w-screen transition ${focused ? "bg-background h-screen" : "bg-transparent"}`}
       onFocus={onFocus}
       onClick={onDismiss}
     >
       <div className="px-4 py-2">
         <input
-          className="w-full rounded-full border border-border bg-background p-2 pl-12 text-primary-text placeholder-secondary-text"
+          className="border-border bg-background text-primary-text placeholder-secondary-text w-full rounded-full border p-2 pl-12"
           tabIndex={2}
           type="text"
           placeholder={t("search-placeholder")}
@@ -79,13 +79,13 @@ export default function RoomSelect({
         {icon}
       </div>
       <ul
-        className={`absolute bottom-0 left-0 right-0 top-14 overflow-y-auto px-4 py-2 ${focused ? "" : "hidden"}`}
+        className={`absolute top-14 right-0 bottom-0 left-0 overflow-y-auto px-4 py-2 ${focused ? "" : "hidden"}`}
       >
         {results.map((room, i) => {
           return (
             <li key={room.id}>
               <a
-                className="block cursor-pointer border-b-2 border-border p-2 hover:bg-highlight-background"
+                className="border-border hover:bg-highlight-background block cursor-pointer border-b-2 p-2"
                 href={`/room/${room.id}`}
                 tabIndex={i + 3}
                 onClick={(e) => {

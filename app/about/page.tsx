@@ -29,7 +29,7 @@ export default function About() {
       </p>
       <h1>{t("title")}</h1>
       <Markdown>{dedent(config.description)}</Markdown>
-      <p className="border-t-2 border-border pt-4">
+      <p className="border-border border-t-2 pt-4">
         {t.rich("powered-by", {
           GitHubLink: () => (
             <a href="https://github.com/aJanuary/concarte/">ConCarte</a>
