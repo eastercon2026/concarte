@@ -8,7 +8,13 @@ import Projection from "ol/proj/Projection.js";
 import Static from "ol/source/ImageStatic.js";
 import VectorSource from "ol/source/Vector";
 import { Fill, Stroke, Style } from "ol/style";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Room, Config } from "./config.types";
 
 interface MapProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -39,6 +45,11 @@ export default function Map({
   const [mapDiv, setMapDiv] = useState<HTMLDivElement | null>(null);
   const [map, setMap] = useState<olMap | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
+  const onPanRef = useRef(onPan);
+
+  useEffect(() => {
+    onPanRef.current = onPan;
+  }, [onPan]);
 
   const selectedStyle = useMemo(
     () =>
@@ -146,7 +157,7 @@ export default function Map({
             "map-extent",
             JSON.stringify(map.getView().calculateExtent()),
           );
-        onPan && onPan();
+        onPanRef.current && onPanRef.current();
       });
 
       setMap(map);
