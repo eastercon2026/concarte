@@ -28,6 +28,14 @@ as a side project. However, we would like to add the following features:
 
 ## Building
 
+### Setup
+
+Install dependencies using [pnpm](https://pnpm.io/):
+
+```bash
+pnpm install
+```
+
 ### Development
 
 Run the development server:
