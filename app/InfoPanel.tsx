@@ -51,7 +51,7 @@ export default function InfoPanel({
     panel = (
       <div className="pointer-events-auto relative bg-background p-4 pt-6 text-left shadow-top">
         <header
-          className={`${expanded && room.description ? "border-1 border-b border-border pb-2" : ""} ${room.description ? "cursor-pointer" : ""}`}
+          className={`${expanded && room.description ? "border-b border-border pb-2" : ""} ${room.description ? "cursor-pointer" : ""}`}
           onClick={handlePanelClick}
         >
           <p className="absolute left-0 right-0 top-0">{icon}</p>

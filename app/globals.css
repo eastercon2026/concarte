@@ -1,6 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --shadow-top: 0px 0 10px rgba(0, 0, 0, 0.8);
+}
+
+@utility prose-default {
+  --tw-prose-body: var(--color-primary-text);
+  --tw-prose-links: var(--color-accent);
+}
 
 .ol-zoom {
   top: 60px !important;

@@ -7,10 +7,11 @@ export function generateStaticParams() {
   });
 }
 
-export default function Room({
-  params: { room },
+export default async function Room({
+  params,
 }: {
-  params: { room: string };
+  params: Promise<{ room: string }>;
 }) {
+  const { room } = await params;
   return <App roomId={room} />;
 }

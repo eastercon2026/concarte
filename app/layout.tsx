@@ -13,8 +13,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export async function generateMetadata() {
   const locale = await getLocale();
-  const messages =
-    (await getMessages()) as IntlConfig<IntlMessages>["messages"];
+  const messages = await getMessages();
   const t = createTranslator({ locale, messages, namespace: "page" });
 
   return {
