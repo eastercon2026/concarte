@@ -16,6 +16,7 @@ import React, {
   useState,
 } from "react";
 import { Room, Config } from "./config.types";
+import { parseSVGPath } from "./svg-utils";
 
 interface MapProps extends React.HTMLAttributes<HTMLDivElement> {
   config: Config;
@@ -31,6 +32,10 @@ async function decodeAllImages(src: string) {
   img.src = src;
   await img.decode();
   return img;
+}
+
+function parseArea(area: [number, number][] | string): [number, number][] {
+  return Array.isArray(area) ? area : parseSVGPath(area);
 }
 
 export default function Map({
@@ -105,9 +110,10 @@ export default function Map({
       });
 
       const markers = config.map.rooms.map((room) => {
+        const coords = parseArea(room.area);
         return new Feature({
           geometry: new Polygon([
-            room.area.map((coords) => [coords[0], height - coords[1]]),
+            coords.map((coords) => [coords[0], height - coords[1]]),
           ]),
           room,
         });

@@ -126,9 +126,11 @@ export interface Room {
   /**
    * Area of the room on the map.
    *
-   * The area should be a list of points in the form [x, y].
+   * Can be either:
+   * - A list of points in the form [x, y]
+   * - An SVG path string (e.g., "M 0 0 L 100 100 L 100 0 Z")
    *
-   * In the image co-oordinates; the origin is the top left corner of the image.
+   * In the image co-ordinates; the origin is the top left corner of the image.
    */
-  area: [number, number][];
+  area: [number, number][] | string;
 }
