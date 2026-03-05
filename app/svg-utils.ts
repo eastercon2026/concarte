@@ -84,27 +84,40 @@ function sampleCubicBezier(
 }
 
 /**
- * Convert an SVG path into an array of coordinates.
+ * Convert an SVG path into an array of rings (sub-paths).
+ *
+ * Each ring is a closed sub-path delimited by M...Z in the SVG path.
+ * Multiple M commands produce multiple rings, supporting disconnected shapes.
  *
  * @param path - SVG path string
- * @returns Array of [x, y] coordinate pairs
+ * @returns Array of rings, where each ring is an array of [x, y] coordinate pairs
  */
-export function parseSVGPath(path: string): [number, number][] {
+export function parseSVGPath(path: string): [number, number][][] {
   const pathData = new SVGPathData(path)
     .toAbs()
     .transform(SVGPathDataTransformer.QT_TO_C())
     .transform(SVGPathDataTransformer.A_TO_C())
     .normalizeHVZ();
 
-  const coords: [number, number][] = [];
+  const rings: [number, number][][] = [];
+  let currentRing: [number, number][] = [];
   let currentX = 0;
   let currentY = 0;
 
   pathData.commands.forEach((command) => {
     switch (command.type) {
       case SVGPathData.MOVE_TO:
+        if (currentRing.length > 0) {
+          rings.push(currentRing);
+          currentRing = [];
+        }
+        currentRing.push([command.x, command.y]);
+        currentX = command.x;
+        currentY = command.y;
+        break;
+
       case SVGPathData.LINE_TO:
-        coords.push([command.x, command.y]);
+        currentRing.push([command.x, command.y]);
         currentX = command.x;
         currentY = command.y;
         break;
@@ -121,7 +134,7 @@ export function parseSVGPath(path: string): [number, number][] {
           command.y,
           curveTolerance,
         );
-        coords.push(...samples);
+        currentRing.push(...samples);
         currentX = command.x;
         currentY = command.y;
         break;
@@ -132,5 +145,9 @@ export function parseSVGPath(path: string): [number, number][] {
     }
   });
 
-  return coords;
+  if (currentRing.length > 0) {
+    rings.push(currentRing);
+  }
+
+  return rings;
 }

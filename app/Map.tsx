@@ -1,5 +1,5 @@
 import { Feature, MapBrowserEvent, Map as olMap, View } from "ol";
-import { Polygon } from "ol/geom";
+import { MultiPolygon } from "ol/geom";
 import { defaults } from "ol/interaction";
 import ImageLayer from "ol/layer/Image.js";
 import VectorLayer from "ol/layer/Vector";
@@ -74,8 +74,11 @@ async function loadMapImage(src: string): Promise<MapImage> {
   }
 }
 
-function parseArea(area: [number, number][] | string): [number, number][] {
-  return Array.isArray(area) ? area : parseSVGPath(area);
+function parseArea(area: [number, number][] | string): [number, number][][] {
+  if (Array.isArray(area)) {
+    return [area];
+  }
+  return parseSVGPath(area);
 }
 
 export default function Map({
@@ -213,11 +216,12 @@ export default function Map({
       }
 
       const markers = config.map.rooms.map((room) => {
-        const coords = parseArea(room.area);
+        const rings = parseArea(room.area);
+        const polygons = rings.map((ring) => [
+          ring.map((coord) => [coord[0], height - coord[1]]),
+        ]);
         return new Feature({
-          geometry: new Polygon([
-            coords.map((coords) => [coords[0], height - coords[1]]),
-          ]),
+          geometry: new MultiPolygon(polygons),
           room,
         });
       });
