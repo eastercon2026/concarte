@@ -5,6 +5,7 @@ import ImageLayer from "ol/layer/Image.js";
 import VectorLayer from "ol/layer/Vector";
 import "ol/ol.css";
 import Projection from "ol/proj/Projection.js";
+import ImageCanvasSource from "ol/source/ImageCanvas.js";
 import Static from "ol/source/ImageStatic.js";
 import VectorSource from "ol/source/Vector";
 import { Fill, Stroke, Style } from "ol/style";
@@ -27,11 +28,50 @@ interface MapProps extends React.HTMLAttributes<HTMLDivElement> {
   onPan?: () => void;
 }
 
-async function decodeAllImages(src: string) {
-  const img = new Image();
-  img.src = src;
-  await img.decode();
-  return img;
+interface MapImage {
+  img: HTMLImageElement;
+  width: number;
+  height: number;
+}
+
+async function loadMapImage(src: string): Promise<MapImage> {
+  const isSvg = src.toLowerCase().endsWith(".svg");
+
+  if (isSvg) {
+    // Fetch the SVG to read its viewBox dimensions, which define the coordinate space
+    const response = await fetch(src);
+    const text = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "image/svg+xml");
+    const svgEl = doc.documentElement;
+    const viewBox = svgEl.getAttribute("viewBox");
+
+    let width: number;
+    let height: number;
+    if (viewBox) {
+      const parts = viewBox.split(/\s+|,/).map(Number);
+      width = parts[2];
+      height = parts[3];
+    } else {
+      // Fall back to width/height attributes
+      width = parseFloat(svgEl.getAttribute("width") || "0");
+      height = parseFloat(svgEl.getAttribute("height") || "0");
+    }
+
+    // Create a blob URL so the image element uses the original SVG
+    const blob = new Blob([text], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+
+    return { img, width, height };
+  } else {
+    const img = new Image();
+    img.src = src;
+    await img.decode();
+    return { img, width: img.naturalWidth, height: img.naturalHeight };
+  }
 }
 
 function parseArea(area: [number, number][] | string): [number, number][] {
@@ -90,10 +130,7 @@ export default function Map({
       return;
     }
 
-    decodeAllImages(config.map.src).then((img) => {
-      const width = img.naturalWidth;
-      const height = img.naturalHeight;
-
+    loadMapImage(config.map.src).then(({ img, width, height }) => {
       const extent = [0, 0, width, height];
       const projection = new Projection({
         code: "image",
@@ -101,13 +138,79 @@ export default function Map({
         extent: extent,
       });
 
-      const imageLayer = new ImageLayer({
-        source: new Static({
-          url: config.map.src,
-          projection: projection,
-          imageExtent: extent,
-        }),
-      });
+      const isSvg = config.map.src.toLowerCase().endsWith(".svg");
+      const imageLayers: ImageLayer<any>[] = [];
+      if (isSvg) {
+        // Low-res layer: a pre-rasterized static image that's always
+        // visible, providing instant feedback during pan/zoom.
+        const lowResCanvas = document.createElement("canvas");
+        lowResCanvas.width = width * 2;
+        lowResCanvas.height = height * 2;
+        const lowResCtx = lowResCanvas.getContext("2d")!;
+        lowResCtx.drawImage(img, 0, 0, lowResCanvas.width, lowResCanvas.height);
+        const lowResUrl = lowResCanvas.toDataURL();
+
+        imageLayers.push(
+          new ImageLayer({
+            source: new Static({
+              url: lowResUrl,
+              projection: projection,
+              imageExtent: extent,
+            }),
+          }),
+        );
+
+        // Hi-res layer: rasterizes the SVG at full fidelity for the
+        // current viewport. Renders on top of the low-res layer.
+        imageLayers.push(
+          new ImageLayer({
+            source: new ImageCanvasSource({
+              canvasFunction: (
+                canvasExtent,
+                _resolution,
+                _pixelRatio,
+                size,
+              ) => {
+                const canvas = document.createElement("canvas");
+                const canvasWidth = size[0];
+                const canvasHeight = size[1];
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+                const ctx = canvas.getContext("2d")!;
+
+                // Fill with background color to prevent the low-res
+                // layer from bleeding through transparent areas.
+                ctx.fillStyle = config.theme.background;
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+                const imageXScale =
+                  canvasWidth / (canvasExtent[2] - canvasExtent[0]);
+                const imageYScale =
+                  canvasHeight / (canvasExtent[3] - canvasExtent[1]);
+                const drawX = (0 - canvasExtent[0]) * imageXScale;
+                const drawY = (canvasExtent[3] - height) * imageYScale;
+                const drawWidth = width * imageXScale;
+                const drawHeight = height * imageYScale;
+
+                ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                return canvas;
+              },
+              projection: projection,
+              ratio: 2,
+            }),
+          }),
+        );
+      } else {
+        imageLayers.push(
+          new ImageLayer({
+            source: new Static({
+              url: config.map.src,
+              projection: projection,
+              imageExtent: extent,
+            }),
+          }),
+        );
+      }
 
       const markers = config.map.rooms.map((room) => {
         const coords = parseArea(room.area);
@@ -133,7 +236,7 @@ export default function Map({
           altShiftDragRotate: false,
           pinchRotate: false,
         }),
-        layers: [imageLayer, markersLayer],
+        layers: [...imageLayers, markersLayer],
         view: new View({
           projection: projection,
         }),
@@ -168,7 +271,7 @@ export default function Map({
 
       setMap(map);
     });
-  }, [config.map, mapDiv, unselectedStyle]);
+  }, [config.map, config.theme.background, mapDiv, unselectedStyle]);
 
   const onMapClick = useCallback(
     (e: MapBrowserEvent<any>) => {
@@ -212,7 +315,8 @@ export default function Map({
       return;
     }
 
-    const vectorLayer = map.getLayers().getArray()[1] as VectorLayer;
+    const layers = map.getLayers().getArray();
+    const vectorLayer = layers[layers.length - 1] as VectorLayer;
     const selected = vectorLayer
       .getSource()!
       .getFeatures()
