@@ -66,6 +66,12 @@ export interface Config {
   };
 
   /**
+   * Quick-filter pills shown below the search box.
+   * Each value is matched against room labels and aliases.
+   */
+  filters?: string[];
+
+  /**
    * The map to display.
    */
   map: {

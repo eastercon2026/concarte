@@ -3,15 +3,17 @@
 import { useState } from "react";
 import Map from "./Map";
 import RoomSelect from "./RoomSelect";
+import FilterPills from "./FilterPills";
 import InfoPanel from "./InfoPanel";
 import config from "./config";
 import { Room } from "./config.types";
-import { set } from "ol/transform";
 
 export default function App({ roomId }: { roomId?: string }) {
   const room = config.map.rooms.find((room) => room.id === roomId);
   const [selectedRoom, setSelectedRoom] = useState<Room | undefined>(room);
   const [focusedRoom, setFocusedRoom] = useState<Room | undefined>(undefined);
+  const [highlightedRooms, setHighlightedRooms] = useState<Room[]>([]);
+  const [activePill, setActivePill] = useState<string | null>(null);
 
   const [infoPanelExpanded, setInfoPanelExpanded] = useState(() => {
     return Boolean(
@@ -21,6 +23,8 @@ export default function App({ roomId }: { roomId?: string }) {
   });
 
   const onRoomSelected = (room?: Room) => {
+    setHighlightedRooms([]);
+    setActivePill(null);
     if (!room) {
       setSelectedRoom(undefined);
       window.history.replaceState(null, "", "/");
@@ -61,10 +65,21 @@ export default function App({ roomId }: { roomId?: string }) {
         config={config}
         selectedRoom={selectedRoom}
         focusedRoom={focusedRoom}
+        highlightedRooms={highlightedRooms}
         onRoomSelected={onRoomSelectedFromMap}
         onPan={onPan}
       />
       <RoomSelect config={config} onRoomSelected={onRoomSelectedFromDropdown} />
+      <FilterPills
+        config={config}
+        activePill={activePill}
+        onPillSelected={(pill, rooms) => {
+          setActivePill(pill);
+          setHighlightedRooms(rooms);
+          setSelectedRoom(undefined);
+          window.history.replaceState(null, "", "/");
+        }}
+      />
       <InfoPanel
         room={selectedRoom}
         expanded={infoPanelExpanded}

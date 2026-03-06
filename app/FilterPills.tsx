@@ -1,0 +1,54 @@
+import React from "react";
+import { Room, Config } from "./config.types";
+
+interface FilterPillsProps {
+  config: Config;
+  activePill: string | null;
+  onPillSelected?: (pill: string | null, rooms: Room[]) => void;
+}
+
+export default function FilterPills({
+  config,
+  activePill,
+  onPillSelected,
+}: FilterPillsProps) {
+  if (!config.filters || config.filters.length === 0) {
+    return null;
+  }
+
+  const onPillClick = (pill: string) => {
+    if (activePill === pill) {
+      onPillSelected && onPillSelected(null, []);
+    } else {
+      const lowerPill = pill.toLowerCase();
+      const matching = config.map.rooms.filter((room) => {
+        if (room.label.toLowerCase().includes(lowerPill)) {
+          return true;
+        }
+        if (room.aliases?.some((a) => a.toLowerCase().includes(lowerPill))) {
+          return true;
+        }
+        return false;
+      });
+      onPillSelected && onPillSelected(pill, matching);
+    }
+  };
+
+  return (
+    <div className="absolute top-15 left-10 z-40 flex gap-2 px-4 pb-2">
+      {config.filters.map((pill) => (
+        <button
+          key={pill}
+          className={`cursor-pointer rounded-full border px-3 py-1 text-sm ${
+            activePill === pill
+              ? "border-accent bg-accent text-white"
+              : "border-border bg-background text-primary-text hover:bg-highlight-background"
+          }`}
+          onClick={() => onPillClick(pill)}
+        >
+          {pill}
+        </button>
+      ))}
+    </div>
+  );
+}

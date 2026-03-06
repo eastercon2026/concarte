@@ -23,6 +23,7 @@ interface MapProps extends React.HTMLAttributes<HTMLDivElement> {
   config: Config;
   selectedRoom?: Room;
   focusedRoom?: Room;
+  highlightedRooms?: Room[];
   onRoomSelected?: (room?: Room) => void;
   onInfoSelected?: () => void;
   onPan?: () => void;
@@ -85,6 +86,7 @@ export default function Map({
   config,
   selectedRoom,
   focusedRoom,
+  highlightedRooms,
   onRoomSelected,
   onInfoSelected,
   onPan,
@@ -105,6 +107,20 @@ export default function Map({
         stroke: new Stroke({
           color: config.theme.accent,
           width: 4,
+        }),
+        fill: new Fill({
+          color: "rgba(0, 0, 0, 0)",
+        }),
+      }),
+    [config.theme.accent],
+  );
+
+  const highlightedStyle = useMemo(
+    () =>
+      new Style({
+        stroke: new Stroke({
+          color: config.theme.accent,
+          width: 3,
         }),
         fill: new Fill({
           color: "rgba(0, 0, 0, 0)",
@@ -353,6 +369,41 @@ export default function Map({
       lastSelected?.setStyle(unselectedStyle);
     };
   }, [selectedFeature, selectedStyle, unselectedStyle]);
+
+  useEffect(() => {
+    if (map == null) {
+      return;
+    }
+
+    const layers = map.getLayers().getArray();
+    const vectorLayer = layers[layers.length - 1] as VectorLayer;
+    const features = vectorLayer.getSource()!.getFeatures();
+
+    const highlightedSet = new Set(highlightedRooms?.map((r) => r.id));
+
+    const affected: Feature[] = [];
+    for (const feature of features) {
+      const room: Room = feature.get("room");
+      if (room === selectedRoom) {
+        continue;
+      }
+      if (highlightedSet.has(room.id)) {
+        feature.setStyle(highlightedStyle);
+        affected.push(feature);
+      } else {
+        feature.setStyle(unselectedStyle);
+      }
+    }
+
+    return function cleanup() {
+      for (const feature of affected) {
+        const room: Room = feature.get("room");
+        if (room !== selectedRoom) {
+          feature.setStyle(unselectedStyle);
+        }
+      }
+    };
+  }, [map, highlightedRooms, selectedRoom, highlightedStyle, unselectedStyle]);
 
   return (
     <>
