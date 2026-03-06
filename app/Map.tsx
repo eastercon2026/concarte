@@ -94,7 +94,7 @@ export default function Map({
 }: MapProps) {
   const [mapDiv, setMapDiv] = useState<HTMLDivElement | null>(null);
   const [map, setMap] = useState<olMap | null>(null);
-  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
+  const selectedFeatureRef = useRef<Feature | null>(null);
   const onPanRef = useRef(onPan);
 
   useEffect(() => {
@@ -299,6 +299,19 @@ export default function Map({
         return;
       }
 
+      const setSelectedFeature = (next: Feature | null) => {
+        const previous = selectedFeatureRef.current;
+        if (previous != null && previous !== next) {
+          previous.setStyle(unselectedStyle);
+        }
+
+        if (next != null) {
+          next.setStyle(selectedStyle);
+        }
+
+        selectedFeatureRef.current = next;
+      };
+
       const feature: Feature = map.forEachFeatureAtPixel(
         e.pixel,
         (f) => f,
@@ -315,7 +328,7 @@ export default function Map({
         setSelectedFeature(null);
       }
     },
-    [map, onRoomSelected],
+    [map, onRoomSelected, selectedStyle, unselectedStyle],
   );
 
   useEffect(() => {
@@ -335,6 +348,19 @@ export default function Map({
       return;
     }
 
+    const setSelectedFeature = (next: Feature | null) => {
+      const previous = selectedFeatureRef.current;
+      if (previous != null && previous !== next) {
+        previous.setStyle(unselectedStyle);
+      }
+
+      if (next != null) {
+        next.setStyle(selectedStyle);
+      }
+
+      selectedFeatureRef.current = next;
+    };
+
     const layers = map.getLayers().getArray();
     const vectorLayer = layers[layers.length - 1] as VectorLayer;
     const selected = vectorLayer
@@ -343,9 +369,7 @@ export default function Map({
       .find(
         (f: { get: (arg0: string) => Room }) => f.get("room") === selectedRoom,
       );
-    if (selected != null) {
-      setSelectedFeature(selected);
-    }
+    setSelectedFeature(selected ?? null);
 
     const focused = vectorLayer
       .getSource()!
@@ -359,16 +383,7 @@ export default function Map({
         maxZoom: 3,
       });
     }
-  }, [map, selectedRoom, focusedRoom]);
-
-  useEffect(() => {
-    selectedFeature?.setStyle(selectedStyle);
-
-    const lastSelected = selectedFeature;
-    return function cleanup() {
-      lastSelected?.setStyle(unselectedStyle);
-    };
-  }, [selectedFeature, selectedStyle, unselectedStyle]);
+  }, [map, selectedRoom, focusedRoom, selectedStyle, unselectedStyle]);
 
   useEffect(() => {
     if (map == null) {
