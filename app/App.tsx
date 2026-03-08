@@ -9,10 +9,39 @@ import InfoPanel from "./InfoPanel";
 import config from "./config";
 import { Room } from "./config.types";
 
-// Module-level store so useSyncExternalStore has stable subscribe/getSnapshot
-// references across renders. getSnapshot caches the parsed value so React
-// doesn't see a new array reference on every call (which would loop).
+// localStorage-backed stores using useSyncExternalStore. Defined at module
+// level for stable subscribe/getSnapshot references. Snapshots are cached so
+// React doesn't see a new reference on every call (which would loop).
 const EMPTY_OVERLAYS: string[] = [];
+
+const infoPanelStore = (() => {
+  const listeners = new Set<() => void>();
+  let cache: boolean | null = null;
+  return {
+    subscribe(listener: () => void) {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+    getSnapshot(): boolean {
+      if (cache === null) {
+        cache = localStorage.getItem("infoPanelExpanded") !== "false";
+      }
+      return cache;
+    },
+    getServerSnapshot(): boolean {
+      return true;
+    },
+    set(value: boolean): void {
+      cache = value;
+      localStorage.setItem("infoPanelExpanded", value ? "true" : "false");
+      for (const listener of listeners) {
+        listener();
+      }
+    },
+  };
+})();
 
 const overlayStore = (() => {
   const listeners = new Set<() => void>();
@@ -56,12 +85,11 @@ export default function App({ roomId }: { roomId?: string }) {
     overlayStore.getServerSnapshot,
   );
 
-  const [infoPanelExpanded, setInfoPanelExpanded] = useState(() => {
-    return Boolean(
-      typeof localStorage !== "undefined" &&
-      localStorage.getItem("infoPanelExpanded"),
-    );
-  });
+  const infoPanelExpanded = useSyncExternalStore(
+    infoPanelStore.subscribe,
+    infoPanelStore.getSnapshot,
+    infoPanelStore.getServerSnapshot,
+  );
 
   const onRoomSelected = (room?: Room) => {
     setHighlightedRooms([]);
@@ -86,9 +114,7 @@ export default function App({ roomId }: { roomId?: string }) {
   };
 
   const onInfoPanelExpandChange = (expanded: boolean) => {
-    setInfoPanelExpanded(expanded);
-    typeof localStorage !== "undefined" &&
-      localStorage.setItem("infoPanelExpanded", expanded ? "true" : "");
+    infoPanelStore.set(expanded);
   };
 
   const onOverlayToggle = (id: string) => {
