@@ -72,6 +72,11 @@ export interface Config {
   filters?: string[];
 
   /**
+   * Overlay images that can be toggled on/off over the map.
+   */
+  overlays?: Overlay[];
+
+  /**
    * The map to display.
    */
   map: {
@@ -82,6 +87,15 @@ export interface Config {
     src: string;
     rooms: Room[];
   };
+}
+
+export interface Overlay {
+  /** Unique identifier for the overlay. */
+  id: string;
+  /** Label shown on the toggle pill. */
+  label: string;
+  /** Path to the image (raster or SVG). Must match the map's coordinate space. */
+  src: string;
 }
 
 export interface Map {}

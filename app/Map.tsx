@@ -19,11 +19,14 @@ import React, {
 import { Room, Config } from "./config.types";
 import { parseSVGPath } from "./svg-utils";
 
+type StringMap<V> = globalThis.Map<string, V>;
+
 interface MapProps extends React.HTMLAttributes<HTMLDivElement> {
   config: Config;
   selectedRoom?: Room;
   focusedRoom?: Room;
   highlightedRooms?: Room[];
+  activeOverlays?: string[];
   onRoomSelected?: (room?: Room) => void;
   onInfoSelected?: () => void;
   onPan?: () => void;
@@ -87,6 +90,7 @@ export default function Map({
   selectedRoom,
   focusedRoom,
   highlightedRooms,
+  activeOverlays,
   onRoomSelected,
   onInfoSelected,
   onPan,
@@ -96,6 +100,9 @@ export default function Map({
   const [map, setMap] = useState<olMap | null>(null);
   const selectedFeatureRef = useRef<Feature | null>(null);
   const onPanRef = useRef(onPan);
+  const overlayLayersRef = useRef<StringMap<ImageLayer<any>[]>>(
+    new globalThis.Map(),
+  );
 
   useEffect(() => {
     onPanRef.current = onPan;
@@ -149,149 +156,236 @@ export default function Map({
       return;
     }
 
-    loadMapImage(config.map.src).then(({ img, width, height }) => {
-      const extent = [0, 0, width, height];
-      const projection = new Projection({
-        code: "image",
-        units: "pixels",
-        extent: extent,
-      });
+    const overlayPromises = (config.overlays ?? []).map((overlay) =>
+      loadMapImage(overlay.src).then((mapImage) => ({ overlay, mapImage })),
+    );
 
-      const isSvg = config.map.src.toLowerCase().endsWith(".svg");
-      const imageLayers: ImageLayer<any>[] = [];
-      if (isSvg) {
-        // Low-res layer: a pre-rasterized static image that's always
-        // visible, providing instant feedback during pan/zoom.
-        const lowResCanvas = document.createElement("canvas");
-        lowResCanvas.width = width * 2;
-        lowResCanvas.height = height * 2;
-        const lowResCtx = lowResCanvas.getContext("2d")!;
-        lowResCtx.drawImage(img, 0, 0, lowResCanvas.width, lowResCanvas.height);
-        const lowResUrl = lowResCanvas.toDataURL();
-
-        imageLayers.push(
-          new ImageLayer({
-            source: new Static({
-              url: lowResUrl,
-              projection: projection,
-              imageExtent: extent,
-            }),
-          }),
-        );
-
-        // Hi-res layer: rasterizes the SVG at full fidelity for the
-        // current viewport. Renders on top of the low-res layer.
-        imageLayers.push(
-          new ImageLayer({
-            source: new ImageCanvasSource({
-              canvasFunction: (
-                canvasExtent,
-                _resolution,
-                _pixelRatio,
-                size,
-              ) => {
-                const canvas = document.createElement("canvas");
-                const canvasWidth = size[0];
-                const canvasHeight = size[1];
-                canvas.width = canvasWidth;
-                canvas.height = canvasHeight;
-                const ctx = canvas.getContext("2d")!;
-
-                // Fill with background color to prevent the low-res
-                // layer from bleeding through transparent areas.
-                ctx.fillStyle = config.theme.background;
-                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-                const imageXScale =
-                  canvasWidth / (canvasExtent[2] - canvasExtent[0]);
-                const imageYScale =
-                  canvasHeight / (canvasExtent[3] - canvasExtent[1]);
-                const drawX = (0 - canvasExtent[0]) * imageXScale;
-                const drawY = (canvasExtent[3] - height) * imageYScale;
-                const drawWidth = width * imageXScale;
-                const drawHeight = height * imageYScale;
-
-                ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-                return canvas;
-              },
-              projection: projection,
-              ratio: 2,
-            }),
-          }),
-        );
-      } else {
-        imageLayers.push(
-          new ImageLayer({
-            source: new Static({
-              url: config.map.src,
-              projection: projection,
-              imageExtent: extent,
-            }),
-          }),
-        );
-      }
-
-      const markers = config.map.rooms.map((room) => {
-        const rings = parseArea(room.area);
-        const polygons = rings.map((ring) => [
-          ring.map((coord) => [coord[0], height - coord[1]]),
-        ]);
-        return new Feature({
-          geometry: new MultiPolygon(polygons),
-          room,
+    Promise.all([loadMapImage(config.map.src), ...overlayPromises]).then(
+      ([{ img, width, height }, ...overlayResults]) => {
+        const extent = [0, 0, width, height];
+        const projection = new Projection({
+          code: "image",
+          units: "pixels",
+          extent: extent,
         });
-      });
-      const markerSource = new VectorSource({
-        features: markers,
-        wrapX: false,
-      });
-      const markersLayer = new VectorLayer({
-        source: markerSource,
-        style: unselectedStyle,
-      });
 
-      const map = new olMap({
-        target: mapDiv,
-        interactions: defaults({
-          altShiftDragRotate: false,
-          pinchRotate: false,
-        }),
-        layers: [...imageLayers, markersLayer],
-        view: new View({
-          projection: projection,
-        }),
-      });
-
-      if (
-        typeof localStorage !== "undefined" &&
-        localStorage.getItem("map-extent")
-      ) {
-        map.getView().fit(JSON.parse(localStorage.getItem("map-extent")!));
-      } else {
-        map.getView().fit(extent);
-      }
-
-      map.on("pointermove", (e) => {
-        const selectable = map.forEachFeatureAtPixel(e.pixel, (f) => f);
-        if (selectable) {
-          mapDiv.style.cursor = "pointer";
-        } else {
-          mapDiv.style.cursor = "";
-        }
-      });
-
-      map.on("moveend", (e) => {
-        typeof localStorage !== "undefined" &&
-          localStorage.setItem(
-            "map-extent",
-            JSON.stringify(map.getView().calculateExtent()),
+        const isSvg = config.map.src.toLowerCase().endsWith(".svg");
+        const imageLayers: ImageLayer<any>[] = [];
+        if (isSvg) {
+          // Low-res layer: a pre-rasterized static image that's always
+          // visible, providing instant feedback during pan/zoom.
+          const lowResCanvas = document.createElement("canvas");
+          lowResCanvas.width = width * 2;
+          lowResCanvas.height = height * 2;
+          const lowResCtx = lowResCanvas.getContext("2d")!;
+          lowResCtx.drawImage(
+            img,
+            0,
+            0,
+            lowResCanvas.width,
+            lowResCanvas.height,
           );
-        onPanRef.current && onPanRef.current();
-      });
+          const lowResUrl = lowResCanvas.toDataURL();
 
-      setMap(map);
-    });
-  }, [config.map, config.theme.background, mapDiv, unselectedStyle]);
+          imageLayers.push(
+            new ImageLayer({
+              source: new Static({
+                url: lowResUrl,
+                projection: projection,
+                imageExtent: extent,
+              }),
+            }),
+          );
+
+          // Hi-res layer: rasterizes the SVG at full fidelity for the
+          // current viewport. Renders on top of the low-res layer.
+          imageLayers.push(
+            new ImageLayer({
+              source: new ImageCanvasSource({
+                canvasFunction: (
+                  canvasExtent,
+                  _resolution,
+                  _pixelRatio,
+                  size,
+                ) => {
+                  const canvas = document.createElement("canvas");
+                  const canvasWidth = size[0];
+                  const canvasHeight = size[1];
+                  canvas.width = canvasWidth;
+                  canvas.height = canvasHeight;
+                  const ctx = canvas.getContext("2d")!;
+
+                  // Fill with background color to prevent the low-res
+                  // layer from bleeding through transparent areas.
+                  ctx.fillStyle = config.theme.background;
+                  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+                  const imageXScale =
+                    canvasWidth / (canvasExtent[2] - canvasExtent[0]);
+                  const imageYScale =
+                    canvasHeight / (canvasExtent[3] - canvasExtent[1]);
+                  const drawX = (0 - canvasExtent[0]) * imageXScale;
+                  const drawY = (canvasExtent[3] - height) * imageYScale;
+                  const drawWidth = width * imageXScale;
+                  const drawHeight = height * imageYScale;
+
+                  ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                  return canvas;
+                },
+                projection: projection,
+                ratio: 2,
+              }),
+            }),
+          );
+        } else {
+          imageLayers.push(
+            new ImageLayer({
+              source: new Static({
+                url: config.map.src,
+                projection: projection,
+                imageExtent: extent,
+              }),
+            }),
+          );
+        }
+
+        // Build overlay layers (hidden by default)
+        const newOverlayLayersMap: StringMap<ImageLayer<any>[]> =
+          new globalThis.Map();
+        const allOverlayLayers: ImageLayer<any>[] = [];
+        for (const { overlay, mapImage } of overlayResults as {
+          overlay: { id: string; src: string };
+          mapImage: MapImage;
+        }[]) {
+          const overlayIsSvg = overlay.src.toLowerCase().endsWith(".svg");
+          const overlayLayers: ImageLayer<any>[] = [];
+          if (overlayIsSvg) {
+            const overlayImg = mapImage.img;
+            const overlayWidth = mapImage.width;
+            const overlayHeight = mapImage.height;
+
+            overlayLayers.push(
+              new ImageLayer({
+                visible: false,
+                source: new ImageCanvasSource({
+                  canvasFunction: (
+                    canvasExtent,
+                    _resolution,
+                    _pixelRatio,
+                    size,
+                  ) => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = size[0];
+                    canvas.height = size[1];
+                    const ctx = canvas.getContext("2d")!;
+                    const imageXScale =
+                      size[0] / (canvasExtent[2] - canvasExtent[0]);
+                    const imageYScale =
+                      size[1] / (canvasExtent[3] - canvasExtent[1]);
+                    const drawX = (0 - canvasExtent[0]) * imageXScale;
+                    const drawY =
+                      (canvasExtent[3] - overlayHeight) * imageYScale;
+                    const drawWidth = overlayWidth * imageXScale;
+                    const drawHeight = overlayHeight * imageYScale;
+                    ctx.drawImage(
+                      overlayImg,
+                      drawX,
+                      drawY,
+                      drawWidth,
+                      drawHeight,
+                    );
+                    return canvas;
+                  },
+                  projection: projection,
+                  ratio: 2,
+                }),
+              }),
+            );
+          } else {
+            overlayLayers.push(
+              new ImageLayer({
+                visible: false,
+                source: new Static({
+                  url: overlay.src,
+                  projection: projection,
+                  imageExtent: extent,
+                }),
+              }),
+            );
+          }
+          newOverlayLayersMap.set(overlay.id, overlayLayers);
+          allOverlayLayers.push(...overlayLayers);
+        }
+        overlayLayersRef.current = newOverlayLayersMap;
+
+        const markers = config.map.rooms.map((room) => {
+          const rings = parseArea(room.area);
+          const polygons = rings.map((ring) => [
+            ring.map((coord) => [coord[0], height - coord[1]]),
+          ]);
+          return new Feature({
+            geometry: new MultiPolygon(polygons),
+            room,
+          });
+        });
+        const markerSource = new VectorSource({
+          features: markers,
+          wrapX: false,
+        });
+        const markersLayer = new VectorLayer({
+          source: markerSource,
+          style: unselectedStyle,
+        });
+
+        const map = new olMap({
+          target: mapDiv,
+          interactions: defaults({
+            altShiftDragRotate: false,
+            pinchRotate: false,
+          }),
+          layers: [...imageLayers, ...allOverlayLayers, markersLayer],
+          view: new View({
+            projection: projection,
+          }),
+        });
+
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("map-extent")
+        ) {
+          map.getView().fit(JSON.parse(localStorage.getItem("map-extent")!));
+        } else {
+          map.getView().fit(extent);
+        }
+
+        map.on("pointermove", (e) => {
+          const selectable = map.forEachFeatureAtPixel(e.pixel, (f) => f);
+          if (selectable) {
+            mapDiv.style.cursor = "pointer";
+          } else {
+            mapDiv.style.cursor = "";
+          }
+        });
+
+        map.on("moveend", (e) => {
+          typeof localStorage !== "undefined" &&
+            localStorage.setItem(
+              "map-extent",
+              JSON.stringify(map.getView().calculateExtent()),
+            );
+          onPanRef.current && onPanRef.current();
+        });
+
+        setMap(map);
+      },
+    );
+  }, [
+    config.map,
+    config.overlays,
+    config.theme.background,
+    mapDiv,
+    unselectedStyle,
+  ]);
 
   const onMapClick = useCallback(
     (e: MapBrowserEvent<any>) => {
@@ -419,6 +513,20 @@ export default function Map({
       }
     };
   }, [map, highlightedRooms, selectedRoom, highlightedStyle, unselectedStyle]);
+
+  useEffect(() => {
+    if (map == null || !config.overlays) {
+      return;
+    }
+    const activeSet = new Set(activeOverlays);
+    for (const overlay of config.overlays) {
+      const layers = overlayLayersRef.current.get(overlay.id) ?? [];
+      const visible = activeSet.has(overlay.id);
+      for (const layer of layers) {
+        layer.setVisible(visible);
+      }
+    }
+  }, [map, activeOverlays, config.overlays]);
 
   return (
     <>

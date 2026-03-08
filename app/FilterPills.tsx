@@ -35,7 +35,7 @@ export default function FilterPills({
   };
 
   return (
-    <div className="absolute top-15 left-10 z-40 flex gap-2 px-4 pb-2">
+    <>
       {config.filters.map((pill) => (
         <button
           key={pill}
@@ -49,6 +49,6 @@ export default function FilterPills({
           {pill}
         </button>
       ))}
-    </div>
+    </>
   );
 }
