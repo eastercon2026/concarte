@@ -26,6 +26,13 @@ const config: Config = {
     disabled: "#cbd5e1",
   },
   filters: ["Toilet", "Food", "Seating"],
+  overlays: [
+    {
+      id: "step-free",
+      label: "♿ Step-free routes",
+      src: "/step-free-routes.svg",
+    },
+  ],
   map: {
     src: "/ground.svg",
     rooms: [
@@ -545,6 +552,7 @@ const config: Config = {
 
           📑 [Programme schedule](https://guide.eastercon2026.org/loc/Balmoral)
 
+          ♿ For step-free access to Balmoral, please follow the purple step-free route through the lower corridor.\\
           ♿ Stage is 1-foot high. Please let Green Room know if you are on the programme and require a stage lift.
         `,
         area: `
@@ -563,6 +571,7 @@ const config: Config = {
 
           📑 [Programme schedule](https://guide.eastercon2026.org/loc/Sandringham)
 
+          ♿ For step-free access to Sandringham, please follow the purple step-free route through the lower corridor.\\
           ♿ Stage is 1-foot high. Please let Green Room know if you are on the programme and require a stage lift.
         `,
         area: `
@@ -675,7 +684,10 @@ const config: Config = {
 
           [Resorts World food outlets](https://www.resortsworldbirmingham.co.uk/eat-drink)
 
-          🕗 Open 10am - 7pm
+          🕗 8am - 10pm Monday - Thursday \\
+          🕗 8am - 12am Friday & Saturday \\
+          🕗 10am - 10pm Sunday \\
+          Individual restaurant opening times may vary.
 
           # NEC
 
@@ -747,7 +759,7 @@ const config: Config = {
         description: `
           Stairs providing access to Balmoral and Sandringham.
 
-          ♿ Four steps with no ramp or stair lift. For step-free access to Balmoral and Sandringham, please follow the signs for the step-free route that takes you through the lower corridor.
+          ♿ Four steps with no ramp or stair lift. For step-free access to Balmoral and Sandringham, please follow the green step-free route to the lower corridor, and then the purple step-free route to Balmoral and Sandringham.
         `,
         area: `
           m 198.34102,77.543183 2.6546,-0.132289 -0.009,5.79497 -2.64588,-0.02667
