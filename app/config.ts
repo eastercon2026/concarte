@@ -461,7 +461,11 @@ const config: Config = {
 
           Our dealers and art show are open to members of both Iridescence and [HaruhiCon](https://www.haruhicon.co.uk/).
           
-          🕗 Open ??? - ???
+          🕗 Friday 3pm - 5pm (previews)
+          🕗 Friday 5pm - 8pm
+          🕗 Saturday 10am - 6pm
+          🕗 Sunday 10am - 4pm
+          🕗 Sunday 4pm - 6pm (collection of purchased works)
         `,
         area: `
           m 114.65995,40.984725 23.05582,-0.141028
