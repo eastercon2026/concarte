@@ -90,13 +90,13 @@ const config: Config = {
         `,
       },
       {
-        id: "pavillion",
-        label: "Pavillion",
+        id: "pavilion",
+        label: "Pavilion",
         aliases: ["Programme", "♿ Access note"],
         description: `
           A room for talks, panels and other programme items. The seating will normally be arranged theatre-style.
 
-          📑 [Programme schedule](https://guide.eastercon2026.org/loc/Pavillion)
+          📑 [Programme schedule](https://guide.eastercon2026.org/loc/Pavilion)
 
           ♿ There can be a chlorine smell from the swimming pool.\\
           ♿ Stage is 1-foot high. Please let Green Room know if you are on the programme and require a stage lift.
@@ -109,13 +109,13 @@ const config: Config = {
         `,
       },
       {
-        id: "wellington-salisbury",
-        label: "Wellington-Salisbury",
+        id: "salisbury-wellington",
+        label: "Salisbury-Wellington",
         aliases: ["Programme"],
         description: `
           A room for talks, panels and other programme items.
 
-          📑 [Programme schedule](https://guide.eastercon2026.org/loc/Wellington-Salisbury)
+          📑 [Programme schedule](https://guide.eastercon2026.org/loc/Salisbury-Wellington)
         `,
         area: `
           M 56.834095,50.512313 32.786518,50.388361 30.5553,48.219113
@@ -298,6 +298,10 @@ const config: Config = {
           A room to play board games, card games, roleplaying games, and other tabletop games.
 
           A library of games will be available, or you are welcome to bring your own.
+
+          Overflow seating is available in the [Mezzanine rooms](/room/stairs-mezzanine) (Note: these do not have step-free access)
+
+          🕗 10am - 8pm
         `,
         area: `
           M 90.240402,53.230546
@@ -361,7 +365,11 @@ const config: Config = {
         description: `
           The place to go to check in and get your badge when you first arrive.
 
-          🕗 Open ??? to ???
+          🕗 Thursday 4pm - 6pm
+          🕗 Friday 9am - 5pm
+          🕗 Saturday 9am - 5pm
+          🕗 Sunday 9am - 5pm
+          🕗 Monday 9am - 11am
         `,
         area: `
           m 95.384595,79.270237
@@ -485,7 +493,10 @@ const config: Config = {
           
           Our dealers and art show are open to members of both Iridescence and [HaruhiCon](https://www.haruhicon.co.uk/).
 
-          🕗 Open ??? - ???
+          🕗 Friday 3pm - 8pm
+          🕗 Saturday 10am - 6pm
+          🕗 Sunday 10am - 6pm
+          🕗 Monday 10am - 2pm
         `,
         area: `
           m 137.71577,40.843697 33.28244,0.06819 0.12387,36.74692 -33.40631,-0.123965
@@ -713,10 +724,11 @@ const config: Config = {
         `,
       },
       {
-        id: "stairs-upper-floor",
-        label: "Upper Floor Stairs",
+        id: "stairs-mezzanine",
+        label: "Mezzanine Stairs",
         aliases: [
           "Stairs",
+          "Games",
           "♿ Access note",
           "Ascot",
           "Devon",
@@ -728,6 +740,8 @@ const config: Config = {
         ],
         description: `
           Stairs providing access to Ascot, Devon, Durham, Sunningdale, and Windsor.
+
+          Has space for overflow seating for the [games room](/room/london).
 
           ♿ Not accessible by wheelchair. There is no lift access to these rooms.
         `,
