@@ -469,10 +469,10 @@ const config: Config = {
 
           Our dealers and art show are open to members of both Iridescence and [HaruhiCon](https://www.haruhicon.co.uk/).
           
-          🕗 Friday 3pm - 5pm (previews)
-          🕗 Friday 5pm - 8pm
-          🕗 Saturday 10am - 6pm
-          🕗 Sunday 10am - 4pm
+          🕗 Friday 3pm - 5pm (previews)\\
+          🕗 Friday 5pm - 8pm\\
+          🕗 Saturday 10am - 6pm\\
+          🕗 Sunday 10am - 4pm\\
           🕗 Sunday 4pm - 6pm (collection of purchased works)
         `,
         area: `
@@ -493,9 +493,9 @@ const config: Config = {
           
           Our dealers and art show are open to members of both Iridescence and [HaruhiCon](https://www.haruhicon.co.uk/).
 
-          🕗 Friday 3pm - 8pm
-          🕗 Saturday 10am - 6pm
-          🕗 Sunday 10am - 6pm
+          🕗 Friday 3pm - 8pm\\
+          🕗 Saturday 10am - 6pm\\
+          🕗 Sunday 10am - 6pm\\
           🕗 Monday 10am - 2pm
         `,
         area: `
@@ -567,7 +567,7 @@ const config: Config = {
 
           📑 [Programme schedule](https://guide.eastercon2026.org/loc/Balmoral)
 
-          ♿ For step-free access to Balmoral, please follow the purple step-free route through the lower corridor.\\
+          ♿ For step-free access to Balmoral, please follow the purple step-free route through the lower corridor, starting to the right of the hotel reception.\\
           ♿ Stage is 1-foot high. Please let Green Room know if you are on the programme and require a stage lift.
         `,
         area: `
@@ -586,7 +586,7 @@ const config: Config = {
 
           📑 [Programme schedule](https://guide.eastercon2026.org/loc/Sandringham)
 
-          ♿ For step-free access to Sandringham, please follow the purple step-free route through the lower corridor.\\
+          ♿ For step-free access to Sandringham, please follow the purple step-free route through the lower corridor, starting to the right of the hotel reception.\\
           ♿ Stage is 1-foot high. Please let Green Room know if you are on the programme and require a stage lift.
         `,
         area: `
