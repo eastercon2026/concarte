@@ -303,6 +303,8 @@ const config: Config = {
 
           Overflow seating is available in the [Mezzanine rooms](/room/stairs-mezzanine) (Note: these do not have step-free access)
 
+          📑 [Scheduled games](https://guide.eastercon2026.org/loc/London%20(Scheduled))
+
           🕗 Friday 3pm - 9pm \\
           🕗 Saturday 10am - 9pm \\
           🕗 Sunday 10am - 9pm \\
