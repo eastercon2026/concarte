@@ -5,6 +5,8 @@ const config: Config = {
   locale: "en",
   description: `
     An interactive map of the Iridescence venue.
+
+    Thank you to James Shields for the venue map graphic.
   `,
   attributions: [
     // Used in the favicon
