@@ -189,8 +189,8 @@ const config: Config = {
         description: `
           Serves a buffet breakfast to guests staying at the hotel.
 
-          🕗 6:30 - 10:00 Weekday\\
-          🕗 7:00 - 11:00 Saturday & Sunday
+          🕗 Weekday 6:30am - 10am\\
+          🕗 Saturday & Sunday 7am - 11am
 
           [More information](https://hbmevents.com/the-arbor)
         `,
@@ -301,7 +301,10 @@ const config: Config = {
 
           Overflow seating is available in the [Mezzanine rooms](/room/stairs-mezzanine) (Note: these do not have step-free access)
 
-          🕗 10am - 8pm
+          🕗 Friday 3pm - 9pm \\
+          🕗 Saturday 10am - 9pm \\
+          🕗 Sunday 10am - 9pm \\
+          🕗 Monday 10am - 4pm
         `,
         area: `
           M 90.240402,53.230546
@@ -337,6 +340,7 @@ const config: Config = {
         aliases: [
           "Ops Room",
           "Help",
+          "Information",
           "Lost and found",
           "Registration",
           "Volunteer",
@@ -348,7 +352,10 @@ const config: Config = {
 
           If you need to pick up your badge after the [Registration Desk](/room/registration) has closed, you can also come here to collect it.
 
-          🕗 Open ??? to ???
+          🕗 Friday 8:45am - 10pm \\
+          🕗 Saturday 8:45am - 10pm \\
+          🕗 Sunday 8:45am - 10pm \\
+          🕗 Monday 8:45am - 3pm
         `,
         area: `
           M 90.240402,66.184011
@@ -369,9 +376,9 @@ const config: Config = {
 
           If you need to pick up your badge after the Registration Desk has closed, please come to the [Ops Room](/room/oxford) to collect it.
 
-          🕗 Thursday 4pm - 6pm
-          🕗 Friday 9am - 5pm
-          🕗 Saturday 9am - 5pm
+          🕗 Thursday 4pm - 6pm \\
+          🕗 Friday 9am - 5pm \\
+          🕗 Saturday 9am - 5pm \\
           🕗 Sunday 9am - 5pm
         `,
         area: `
@@ -400,13 +407,15 @@ const config: Config = {
       {
         id: "hotel-reception",
         label: "Hotel Reception",
-        aliases: ["Reception"],
+        aliases: ["Reception", "♿ Access note"],
         description: `
           The reception desk for the hotel.
 
           This is separate from the [Registration Desk](/room/registration) for the convention.
 
           🕗 Open 24/7
+
+          ♿ A low-level counter is available at the [Concierge Desk](/room/concierge-desk) that can be used for check-in.
         `,
         area: `
           m 111.92975,83.487145
@@ -421,7 +430,7 @@ const config: Config = {
         `,
       },
       {
-        id: "concerge-desk",
+        id: "concierge-desk",
         label: "Concierge Desk",
         aliases: ["Concierge", "Help", "♿ Access note"],
         description: `
@@ -530,9 +539,9 @@ const config: Config = {
       {
         id: "kent",
         label: "Kent",
-        aliases: ["Activities", "Lego", "Social"],
+        aliases: ["Listeners"],
         description: `
-          A space to socialise while taking part in activities such as building Lego.
+          A space to have private conversations with the listeners team, who are available to listen to any complaints.
         `,
         area: `
           m 184.50937,65.635015
@@ -702,9 +711,9 @@ const config: Config = {
 
           [Resorts World food outlets](https://www.resortsworldbirmingham.co.uk/eat-drink)
 
-          🕗 8am - 10pm Monday - Thursday \\
-          🕗 8am - 12am Friday & Saturday \\
-          🕗 10am - 10pm Sunday \\
+          🕗 Friday & Saturday 8am - 12am \\
+          🕗 Sunday 10am - 10pm \\
+          🕗 Monday - Thursday 8am - 10pm \\
           Individual restaurant opening times may vary.
 
           # NEC
@@ -732,7 +741,6 @@ const config: Config = {
         aliases: [
           "Stairs",
           "Games",
-          "♿ Access note",
           "Ascot",
           "Devon",
           "Durham",
@@ -740,6 +748,7 @@ const config: Config = {
           "Windsor",
           "Meeting",
           "Newsletter",
+          "♿ Access note",
         ],
         description: `
           Stairs providing access to Ascot, Devon, Durham, Sunningdale, and Windsor.
