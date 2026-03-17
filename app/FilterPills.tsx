@@ -39,7 +39,7 @@ export default function FilterPills({
       {config.filters.map((pill) => (
         <button
           key={pill}
-          className={`cursor-pointer rounded-full border px-3 py-1 text-sm ${
+          className={`cursor-pointer rounded-full border px-4 py-2 text-sm whitespace-nowrap ${
             activePill === pill
               ? "border-accent bg-accent text-white"
               : "border-border bg-background text-primary-text hover:bg-highlight-background"

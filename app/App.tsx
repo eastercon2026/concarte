@@ -145,7 +145,7 @@ export default function App({ roomId }: { roomId?: string }) {
         onPan={onPan}
       />
       <RoomSelect config={config} onRoomSelected={onRoomSelectedFromDropdown} />
-      <div className="absolute top-15 left-10 z-40 flex gap-2 px-4 pb-2">
+      <div className="absolute top-15 left-10 z-40 flex flex-wrap gap-2 px-4 pb-2 pointer-coarse:left-14">
         <OverlayPills
           config={config}
           activeOverlays={activeOverlays}
