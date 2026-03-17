@@ -6,6 +6,10 @@
   "room-select": {
     "search-placeholder": "Search for a room..."
   },
+  "infoPanel": {
+    "showDetails": "Show details",
+    "hideDetails": "Hide details"
+  },
   "about": {
     "back": "Back to map",
     "title": "About",

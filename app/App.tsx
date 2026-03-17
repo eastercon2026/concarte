@@ -26,12 +26,12 @@ const infoPanelStore = (() => {
     },
     getSnapshot(): boolean {
       if (cache === null) {
-        cache = localStorage.getItem("infoPanelExpanded") !== "false";
+        cache = localStorage.getItem("infoPanelExpanded") === "true";
       }
       return cache;
     },
     getServerSnapshot(): boolean {
-      return true;
+      return false;
     },
     set(value: boolean): void {
       cache = value;

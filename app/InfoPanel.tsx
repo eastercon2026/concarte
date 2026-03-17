@@ -23,6 +23,8 @@ export default function InfoPanel({
   onInfoPanelExpandChange,
   onZoomClick,
 }: InfoPanelProps) {
+  const t = useTranslations();
+
   let panel = <></>;
   if (room) {
     const handlePanelClick = () => {
@@ -39,22 +41,31 @@ export default function InfoPanel({
 
     let icon;
     if (!room.description) {
-      icon = (
-        <ChevronUpIcon className="fill-disabled stroke-disabled m-auto size-6" />
-      );
+      icon = <ChevronUpIcon className="fill-disabled stroke-disabled size-6" />;
     } else if (expanded) {
-      icon = <ChevronDownIcon className="m-auto size-6" />;
+      icon = <ChevronDownIcon className="size-6" />;
     } else {
-      icon = <ChevronUpIcon className="m-auto size-6" />;
+      icon = <ChevronUpIcon className="size-6" />;
     }
 
     panel = (
-      <div className="bg-background shadow-top pointer-events-auto relative p-4 pt-6 text-left">
+      <div
+        className={`bg-background shadow-top pointer-events-auto relative p-4 text-left ${room.description ? "pt-10" : "pt-6"}`}
+      >
         <header
           className={`${expanded && room.description ? "border-border border-b pb-2" : ""} ${room.description ? "cursor-pointer" : ""}`}
           onClick={handlePanelClick}
         >
-          <p className="absolute top-0 right-0 left-0">{icon}</p>
+          <p className="absolute top-0 right-0 left-0 flex flex-col items-center leading-none">
+            {icon}
+            {room.description && (
+              <span className="text-secondary-text text-xs leading-none">
+                {expanded
+                  ? t("infoPanel.hideDetails")
+                  : t("infoPanel.showDetails")}
+              </span>
+            )}
+          </p>
           <h1 className="text-xl">
             <button
               className="mr-2 align-text-bottom"
@@ -95,8 +106,6 @@ export default function InfoPanel({
       </div>
     );
   }
-
-  const t = useTranslations();
 
   return (
     <div className="pointer-events-none absolute right-0 bottom-0 left-0 text-right">
