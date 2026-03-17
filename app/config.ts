@@ -167,6 +167,8 @@ const config: Config = {
         description: `
           A bar and restaurant located on the ground floor of the hotel, with views of the river.
 
+          Reservations required.
+
           Open to all guests aged 16+
           
           🕗 5pm - 12am
@@ -272,6 +274,10 @@ const config: Config = {
           Main bar located in the hotel lobby.
 
           This bar will be shared with [HaruhiCon](https://www.haruhicon.co.uk/), as well as non-convention guests.
+
+          They will be serving a condensed version of their standard menu, with a 20% discount on some food and beverage on presentation of a badge.
+
+          It will also be serving late night pizza, bacon rolls or spicy wedges between 11pm and 2am.
 
           🍽️ [Food menu](https://www.hilton.com/en/hotels/bhxmetw-hilton-birmingham-metropole/dining/gild-lobby-bar/?htmlMenu4ActiveTab=1)
 
@@ -463,6 +469,8 @@ const config: Config = {
           A takeaway food outlet located in the hotel lobby.
 
           Sells sandwiches, snacks and drinks.
+
+          There is a 20% discount on both food and beverage on presentation of a badge.
           
           🕗 Open 7am - 10pm
           `,
@@ -522,7 +530,7 @@ const config: Config = {
       {
         id: "arden",
         label: "Arden",
-        aliases: ["Social", "Seating", "Hampton", "Henley"],
+        aliases: ["Fan loung", "Social", "Seating", "Hampton", "Henley"],
         description: `
           A space to relax, socialise, and eat food.
         `,
