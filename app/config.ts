@@ -530,7 +530,7 @@ const config: Config = {
       {
         id: "arden",
         label: "Arden",
-        aliases: ["Fan loung", "Social", "Seating", "Hampton", "Henley"],
+        aliases: ["Fan lounge", "Social", "Seating", "Hampton", "Henley"],
         description: `
           A space to relax, socialise, and eat food.
         `,
