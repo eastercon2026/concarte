@@ -1028,6 +1028,31 @@ const config: Config = {
           z
         `,
       },
+      {
+        id: "food-trucks",
+        label: "Food Trucks",
+        aliases: ["Food"],
+        description: `
+          Food trucks located in the car park, near the main entrance.
+          
+          Three options which will vary daily:
+
+          * Street Souvlaki (Greek BBQ street food)
+          * Victoria Creperie desserts (Easter-themed menu)
+          * Nayia's Nuggies (with variations/specials daily i.e nuggets, fried chicken, loaded fries)
+
+          🕗 Friday 5pm - 9pm\\
+          🕗 Saturday & Sunday Midday - 9pm\\
+          🕗 Monday Midday - 3pm
+        `,
+        area: `
+          m 87.329079,133.20099
+          h 29.104171
+          v 8.63202
+          H 87.329079
+          Z
+        `,
+      },
     ],
   },
 };
