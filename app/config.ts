@@ -511,7 +511,7 @@ const config: Config = {
       {
         id: "queens",
         label: "Queens",
-        aliases: ["Dealers"],
+        aliases: ["Dealers", "Fan tables"],
         description: `
           A selection of dealers selling books, comics, games, and other merchandise.
           
