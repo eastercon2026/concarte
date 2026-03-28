@@ -382,8 +382,6 @@ const config: Config = {
         description: `
           The place to go to check in and get your badge when you first arrive.
 
-          Please bring a form of ID with you - something with your photo and name on it, in case you’re not known to the staff/volunteers at the desk.
-
           If you need to pick up your badge after the Registration Desk has closed, please come to the [Ops Room](/room/oxford) to collect it.
 
           🕗 Thursday 4pm - 6pm \\
