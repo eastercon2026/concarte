@@ -549,9 +549,11 @@ const config: Config = {
       {
         id: "kent",
         label: "Kent",
-        aliases: ["Listeners"],
+        aliases: ["Quiet room"],
         description: `
-          A space to have private conversations with the listeners team, who are available to listen to any complaints.
+          A space to decompress and get away from the noise and activity of the convention.
+
+          Please keep noise to a minimum in this room.
         `,
         area: `
           m 184.50937,65.635015
