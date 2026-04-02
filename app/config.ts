@@ -390,11 +390,11 @@ const config: Config = {
           🕗 Sunday 9am - 5pm
         `,
         area: `
-          m 95.384595,79.270237
-          h 11.589945
-          v 3.780676
-          H 95.384595
-          Z
+          m 91.447354,85.057733
+          h 2.8566
+          v 10.644796
+          h -2.8566
+          z
         `,
       },
       {
@@ -859,11 +859,13 @@ const config: Config = {
       {
         id: "toilets-c-accessible",
         label: "Accessible Toilet",
-        aliases: ["Toilets"],
+        aliases: ["Toilets", "♿ Access note"],
         description: `
           Accessible toilets with a wide cubicle and support rails.
 
           The convention's policy is that people are welcome to use the toilets that they feel most comfortable in.
+
+          ♿ The door is slightly broken and requires a lot of force to close.
         `,
         area: `
           m 50.951075,77.193968
@@ -998,12 +1000,30 @@ const config: Config = {
           This area will be shared with [HaruhiCon](https://www.haruhicon.co.uk/), as well as non-convention guests.
         `,
         area: `
-          m 90.894109,88.198049
-          h 2.803418
-          V 102.3908
-          h -2.803418
-          z
+          m 90.97472,96.224739
+          h 2.921896
+          v 5.910241
+          H 90.97472
+          Z
          `,
+      },
+      {
+        id: "real-ale-bar",
+        label: "Real Ale Bar",
+        aliases: ["Bar"],
+        description: `
+          Serves a selection of cask and keg beers from the Attic Brewery.
+
+          🕗 Friday - Sunday 11am-2am \\
+          🕗 Monday 11am-close (dependent on how busy it is)
+        `,
+        area: `
+          m 97.680206,78.042511
+          h 9.619754
+          v 2.35771
+          h -9.619754
+          z
+        `
       },
       {
         id: "seats-corridor",
