@@ -354,6 +354,7 @@ const config: Config = {
           "Lost and found",
           "Registration",
           "Volunteer",
+          "Scooter park"
         ],
         description: `
           Where the behind the scenes magic happens.
@@ -361,6 +362,8 @@ const config: Config = {
           If you have any questions, need help with anything, or want to volunteer to help out, please come to the Ops Room.
 
           If you need to pick up your badge after the [Registration Desk](/room/registration) has closed, you can also come here to collect it.
+
+          If you are borrowing a mobility scooter, you can pick up and drop them off here.
 
           🕗 Friday 8:45am - 10pm \\
           🕗 Saturday 8:45am - 10pm \\
