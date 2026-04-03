@@ -309,6 +309,8 @@ const config: Config = {
 
           Overflow seating is available in the [Mezzanine rooms](/room/stairs-mezzanine) (Note: these do not have step-free access)
 
+          Our games rooms are open to members of both Iridescence and [HaruhiCon](https://www.haruhicon.co.uk/).
+
           📑 [Scheduled games](https://guide.eastercon2026.org/loc/London%20(Scheduled))
 
           🕗 Friday 3pm - 9pm \\
