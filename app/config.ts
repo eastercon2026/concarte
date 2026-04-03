@@ -1078,6 +1078,29 @@ const config: Config = {
           Z
         `,
       },
+      {
+        id: "haruhicon-dealers",
+        label: "Viscount-Monarch",
+        aliases: ["HaruhiCon", "Dealers"],
+        description: `
+          HaruhiCon's dealers room. Accessible with your Iridescence badge.
+        `,
+        area: `
+          m 232.10229,111.03791 34.66602,-14.399732 6.2932,2.559952 9.38649,22.29291 -43.09251,18.87965 -9.59982,-23.78622
+          z
+        `
+      }, {
+        id: "haruhicon-games",
+        label: "Warwick",
+        aliases: ["HaruhiCon", "Games"],
+        description: `
+          HaruhiCon's digital games room. Accessible with your Iridescence badge.
+        `,
+        area: `
+          m 214.92928,164.69023 17.06635,-7.2532 14.93305,35.41267 -17.06635,7.25319
+          z
+        `
+      }
     ],
   },
 };
